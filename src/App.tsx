@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+import HomePage from './components/HomePage';
+import { decrementCount, incrementCount } from './store/counter/CounterAction';
+import { AppState } from './store/rootStore';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+interface AppProps {
+  increment: () => void;
+  decrement: () => void;
 }
 
-export default App;
+const mapStateToProps = (state:AppState) => ({
+  count: state.counterReducer.count
+})
+
+const mapDispatchToPros = (dispatch: Dispatch) : AppProps => ({
+  increment: () => dispatch(incrementCount()),
+  decrement: () => dispatch(decrementCount())
+})
+class App extends Component<AppProps, AppState> {
+  render(): JSX.Element{
+    return (
+      <HomePage {...this.props}/>
+      );
+  }
+ 
+}
+
+export default connect(mapStateToProps, mapDispatchToPros)(App);
